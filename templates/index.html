@@ -6,7 +6,11 @@
    <body>
       <h1>Hello, World!</h1>
       <h2>The date and time on the server is: {{ time }}</h2>
-      <button> <a href="/upload/">Subir Archivo</a></button>
-      <button> <a href="/my-link/">Imprimir</a></button>   
+      <form action = "http://192.168.1.15:3003/uploader" method = "POST" 
+         enctype = "multipart/form-data">
+         <input type = "file" name = "file" />
+         <input type = "submit"/>
+      </form>  
+      
    </body>
 </html>

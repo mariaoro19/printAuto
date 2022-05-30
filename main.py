@@ -1,8 +1,9 @@
 #from flask import Flask
-from flask import Flask, render_template
 import datetime
 import sys
 import os
+from flask import Flask, render_template, request
+from werkzeug.utils import secure_filename
 #import tkinter as tk
 #from tkinter import ttk
 import cups
@@ -40,8 +41,30 @@ def my_link():
   print(printer)
   conn.printFile (printer_name, file, "Project Report", {})  
 
-
   return 'Click.'
 
+@app.route('/upload')
+def upload_file():
+   return render_template('index.html')
+	
+@app.route('/uploader', methods = ['GET', 'POST'])
+def upload_file_2():
+   print("uploader")
+   if request.method == 'POST':
+      f = request.files['file']
+      f.save(secure_filename(f.filename))
+      conn = cups.Connection ()
+      printers = conn.getPrinters ()
+      for printer in printers:
+         print (printer, printers[printer]["device-uri"])
+         printer_name=printer
+      print(f.filename)
+      file =f.filename
+      print(printer)
+      conn.printFile (printer_name, file, "Project Report", {})  
+      return 'file uploaded successfully'
+
+
 if __name__ == '__main__':
-    app.run(debug=True, port=3003, host='192.168.1.15')
+
+   app.run(debug=True, port=3003, host='192.168.1.15')
