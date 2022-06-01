@@ -26,22 +26,21 @@ def upload_file():
    return render_template('index.html')
 
 # Printing after uploading the file	
-@app.route('/uploader', methods = ['GET', 'POST'])
+@app.route('/Send', methods = ['GET', 'POST'])
 def send_file():
-   print("uploader")
+   print("Send")
    if request.method == 'POST':
       f = request.files['file']
       f.save(secure_filename(f.filename))
-      conn = cups.Connection ()
-      printers = conn.getPrinters ()
-      for printer in printers:
-         print (printer, printers[printer]["device-uri"])
-         printer_name=printer
-      print(f.filename)
-      file =f.filename
-      conn.printFile (printer_name, file, "Project Report", {})  
-      return 'file uploaded successfully'
-
+      # conn = cups.Connection ()
+      # printers = conn.getPrinters ()
+      # for printer in printers:
+      #    print (printer, printers[printer]["device-uri"])
+      #    printer_name=printer
+      # print(f.filename)
+      # file =f.filename
+      # conn.printFile (printer_name, file, "Project Report", {})  
+      return render_template('send.html')
 # Connecting to the localhost
 if __name__ == '__main__':
 
