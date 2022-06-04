@@ -10,7 +10,7 @@ import os
 import urllib.request
 from flask import Flask, flash, request, redirect, url_for, render_template
 from werkzeug.utils import secure_filename
-
+import PyPDF2
 UPLOAD_FOLDER = 'static/uploads/'
 
 
@@ -70,22 +70,51 @@ def upload_image():
 		return redirect(request.url)
 	file = request.files['file']
 	if file.filename == '':
-		flash('No image selected for uploading')
+		flash('No ha seleccionado archivo')
 		return redirect(request.url)
 	if file and allowed_file(file.filename):
 		filename = secure_filename(file.filename)
 		file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-		#print('upload_image filename: ' + filename)
-		flash('Image successfully uploaded and displayed below')
+
+		if filename.rsplit('.', 1)[1].lower() == 'pdf':
+			filepdf='static/uploads/'+filename
+			file2 = open(filepdf, 'rb')
+			readpdf = PyPDF2.PdfFileReader(file2)
+			totalpages = readpdf.numPages
+		else:
+			totalpages = 1
+		print("total pages",totalpages)
+		flash('Imagen cargada exitosamente')
+		
 		return render_template('upload.html', filename=filename)
 	else:
-		flash('Allowed image types are -> png, jpg, jpeg, gif')
+		flash('Formatos permitidos -> png, jpg, jpeg, gif')
 		return redirect(request.url)
+	
+	print(filename)
+	
 
 @app.route('/display/<filename>')
 def display_image(filename):
 	#print('display_image filename: ' + filename)
 	return redirect(url_for('static', filename='uploads/' + filename), code=301)
+
+# # Printing after uploading the file	
+# @app.route('/Send', methods = ['GET', 'POST'])
+# def send_file():
+#    print("Send")
+#    if request.method == 'POST':
+#       f = request.files['file']
+#       f.save(secure_filename(f.filename))
+#       # conn = cups.Connection ()
+#       # printers = conn.getPrinters ()
+#       # for printer in printers:
+#       #    print (printer, printers[printer]["device-uri"])
+#       #    printer_name=printer
+#       # print(f.filename)
+#       # file =f.filename
+#       # conn.printFile (printer_name, file, "Project Report", {})  
+#       return render_template('send.html')
 
 # Connecting to the localhost
 if __name__ == '__main__':
