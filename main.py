@@ -11,6 +11,7 @@ import urllib.request
 from flask import Flask, flash, request, redirect, url_for, render_template
 from werkzeug.utils import secure_filename
 import PyPDF2
+
 UPLOAD_FOLDER = 'static/uploads/'
 
 
@@ -81,17 +82,22 @@ def upload_image():
 			file2 = open(filepdf, 'rb')
 			readpdf = PyPDF2.PdfFileReader(file2)
 			totalpages = readpdf.numPages
+			sizeFileV = readpdf.getPage(0).mediaBox
+			if sizeFileV[2]>612:
+			   sizeFile="Oficio"
+			else:
+			   sizeFile="Carta"
+			
 		else:
 			totalpages = 1
 		print("total pages",totalpages)
 		flash('Imagen cargada exitosamente')
 		
-		return render_template('upload.html', filename=filename)
+		return render_template('pay.html', filename=filename,totalpages=totalpages, sizeFile=sizeFile)
 	else:
 		flash('Formatos permitidos -> png, jpg, jpeg, gif')
 		return redirect(request.url)
 	
-	print(filename)
 	
 
 @app.route('/display/<filename>')
@@ -100,21 +106,37 @@ def display_image(filename):
 	return redirect(url_for('static', filename='uploads/' + filename), code=301)
 
 # # Printing after uploading the file	
-# @app.route('/Send', methods = ['GET', 'POST'])
-# def send_file():
-#    print("Send")
-#    if request.method == 'POST':
-#       f = request.files['file']
-#       f.save(secure_filename(f.filename))
-#       # conn = cups.Connection ()
-#       # printers = conn.getPrinters ()
-#       # for printer in printers:
-#       #    print (printer, printers[printer]["device-uri"])
-#       #    printer_name=printer
-#       # print(f.filename)
-#       # file =f.filename
-#       # conn.printFile (printer_name, file, "Project Report", {})  
-#       return render_template('send.html')
+@app.route('/payProcess/<filename>', methods=['GET','POST'])
+def pay(filename):
+   color=request.form.get('color')
+   numCopies=str(request.form.get('numCopies'))
+   pages=request.form.get('pages')
+	
+   print(color)
+   print(numCopies)
+   print(pages)
+   if request.method == 'POST':
+	   #f = request.files['file']
+	   #f.save(secure_filename(f.filename))
+	   conn = cups.Connection ()
+	   printers = conn.getPrinters ()
+	   for printer in printers:
+		   print (printer, printers[printer]["device-uri"])
+		   printer_name=printer
+	   #print(f.filename)
+	   #file =f.filename
+	   file="static/uploads/"+filename
+	   print(file)
+	   if pages=="":
+
+		   #conn.printFile (printer_name, filename, "Project Report", {})    
+		   #conn.printFile (printer_name, filename, "Project Report", {"print-color-mode":"monochrome","copies":"1","sides":"two-sided-long-edge"})  
+		   conn.printFile (printer_name, file, "Project Report", {"print-color-mode":color,"copies":numCopies,"sides":"one-sided", "orientation":"5"}) 
+	   else:
+		   conn.printFile (printer_name, file, "Project Report", {"print-color-mode":color,"copies":numCopies,"sides":"one-sided","page-ranges":pages, "size":"legal"}) 
+	
+   
+   return render_template('payProcess.html')
 
 # Connecting to the localhost
 if __name__ == '__main__':

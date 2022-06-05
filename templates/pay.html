@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/style.css/">   
+    <title>Pagar</title>
+</head>
+<body>
+    <p>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul>
+            {% for message in messages %}
+              <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+    </p>
+    {% if filename %}
+        <div>
+            <embed src="{{ url_for('display_image', filename=filename) }}">
+            <label>Numero de páginas : {{totalpages}}</label>
+            <label>Tamaño : {{sizeFile}}</label>
+        </div>
+    {% endif %}
+    <form method="post" action="{{ url_for('pay', filename=filename) }}" method="GET" enctype="multipart/form-data">
+        <dl>
+             
+            <p>
+               
+                <div>
+                    <label>Ecoga tipo de impresion</label>
+                    <label>
+                        <input type="radio" name="color" value="monochrome" required>Blaco y Negro
+                    </label>
+                    <label >
+                        <input type="radio" name="color" value="color">Color
+                    </label>
+                </div>
+                <div>
+                    <label>Ingrese # copias: </label>
+                    <input type="number" name ="numCopies" value="1" >
+                </div>
+                <div>
+                    <label>Ingrese paginas a imprimir: </label>
+                    <input type="text"  name="pages" placeholder="Todas">
+                </div>
+                <p>
+                    <input type="submit" name="pay" value="Pagar">
+                </p>
+            </p>
+        </dl>
+    </form>
+    
+       
+ </body>
+</html>
