@@ -1,8 +1,117 @@
-body {
-   background: blue;
-   color: yellow;
+html {
+   font-size: 16px;
+   font-family: 'Poppins', sans-serif;
 }
-.file{
-   width: 800px;
-   height: 2100px;
+
+* {
+   background-color: white;
+   margin: 0;
+
+}
+
+body {
+   width: 100vw;
+   height: 100vh;
+   display: flex;
+   flex-direction: column;
+   justify-content: space-around;
+   align-items: center;
+
+
+}
+
+.logo {
+   width: 60%;
+   height: auto;
+   padding-top: 2rem;
+ 
+
+}
+
+.selectFile {
+   display: flex;
+   flex-direction: column;
+   justify-content: space-around;
+   align-items: center;
+   width: 80%;
+
+}
+
+form dl {
+   display: flex;
+   flex-direction: column;
+   justify-content: space-around;
+   align-items: center;
+   align-content: center;
+   text-align: center;
+
+}
+
+.btn1 {
+   font-size: 1.3rem;
+   background-color: grey;
+}
+
+.fileUpload {
+   display: flex;
+   flex-direction: column;
+   justify-content: space-around;
+   align-items: center;
+   font-size: 1.3rem;
+}
+
+.printInfo {
+   display: flex;
+   flex-direction: column;
+   justify-content: space-around;
+   align-items: center;
+
+}
+
+
+.logoInfo {
+   display: flex;
+   flex-direction: column;
+   justify-content: space-between;
+   align-items: center;
+}
+
+.mainFile {
+   display: flex;
+   flex-direction: row;
+   justify-content: space-around;
+   align-items: center;
+   width: 95%;
+   height: 80vh;
+}
+
+.file {
+   width: 50%;
+   height: 75vh;
+   
+
+}
+
+@media only screen and (min-width: 360px) and (max-width: 767px) {
+   body {
+      font-size: 12px;
+   }
+
+   .mainFile {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      width: 80%;
+   }
+
+   .file {
+      width: 95%;
+      height: auto;
+
+   }
+   .logo{
+      width: 80%;
+   }
+
 }

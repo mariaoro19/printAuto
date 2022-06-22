@@ -3,37 +3,50 @@
 <head>
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+   <meta name="viewport" content="width=device-width">
    <title>{{ title }}</title>
-   <link rel="stylesheet" href="../static/css/style.css/">  
+   <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap" rel="stylesheet">
 </head>
-
-<h2>Selecciona un archivo</h2>
-<p>
-	{% with messages = get_flashed_messages() %}
-	  {% if messages %}
-		<ul>
-		{% for message in messages %}
-		  <li>{{ message }}</li>
-		{% endfor %}
-		</ul>
-	  {% endif %}
-	{% endwith %}
-</p>
-{% if filename %}
-	<div>
-		<embed src="{{ url_for('display_image', filename=filename) }}">
-	</div>
-{% endif %}
-<form method="post" action="/" enctype="multipart/form-data">
-    <dl>
+<body>
+	<img class="logo" src="/static/img/printexpress.PNG"/>
+	<div class="selectFile">
+		<h2>Selecciona un archivo</h2>
+		<h4> Formatos permitidos:-></h4>
+		<h4> png, jpg, jpeg, gif, pdf</h4>
 		<p>
-			<input type="file" name="file" autocomplete="off" required>			
+			{% with messages = get_flashed_messages() %}
+			{% if messages %}
+				<p>
+				{% for message in messages %}
+				{{ message }}
+				{% endfor %}
+				</p>
+			{% endif %}
+			{% endwith %}
 		</p>
-    </dl>
-    <p>
-		<input type="submit" value="Cargar">
+		{% if filename %}
+	
+		<embed src="{{ url_for('display_image', filename=filename) }}">
 		
-	</p>
-</form>
+		{% endif %}
+		<form class="form" method="post" action="/" enctype="multipart/form-data">
+			<dl>
+				<p>
+					<input class="btn" type="file" name="file" style="font-family:'Poppins', sans-serif;" autocomplete="off" required >			
+
+				</p>
+				<p>
+					<input class="btn1" type="submit" value="Cargar" style="font-family:'Poppins', sans-serif;">
+					
+				</p>
+			</dl>
+			
+		</form>
+	</div>
+	
+</body>
 
