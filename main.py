@@ -4,7 +4,7 @@ import os
 #from flask import Flask, render_template, request
 #from werkzeug.utils import secure_filename
 import cups
-from flask import Flask, flash, request, redirect, url_for, render_template
+from flask import Flask, session, flash, request, redirect, url_for, render_template
 from werkzeug.utils import secure_filename
 import PyPDF2
 import glob
@@ -84,15 +84,16 @@ def upload_image():
 			totalpages = readpdf.numPages
 			sizeFileV = readpdf.getPage(0).mediaBox
 			if sizeFileV[2]>612:
-			   sizeFile="Oficio"
+			   sizeFile="Legal"
 			else:
-			   sizeFile="Carta"	
+			   sizeFile="Letter"	
 		else:
 			totalpages = 1
 			sizeFile="Carta"	
 		print("total pages",totalpages)
 		flash('Imagen cargada exitosamente')
-
+		session['size'] = sizeFile
+		
 		return render_template('pay.html', filename=filename,totalpages=totalpages, sizeFile=sizeFile)
 	else:
 		flash('Formato del documento no admitido')
@@ -115,7 +116,10 @@ def pay(filename):
    print(color)
    print(numCopies)
    print(pages)
-   #print(sizeFile)
+   #size  = sizeFile.get('sizeFile',None)
+   #print(size)
+   sizeFile = session.get('size', None)
+   print(sizeFile)
    if request.method == 'POST':
 	   #f = request.files['file']
 	   #f.save(secure_filename(f.filename))
@@ -131,12 +135,11 @@ def pay(filename):
 	   if pages=="":
 
 	      #conn.printFile (printer_name, filename, "Project Report", {})    
-	      conn.printFile (printer_name, file, "Project Report", {"print-color-mode":color,"copies":numCopies,"sides":sides})  
-	      #conn.printFile (printer_name, file, "Project Report", {"print-color-mode":color,"copies":numCopies,"sides":"one-sided"}) 
+	      conn.printFile (printer_name, file, "Project Report", {"print-color-mode":color,"copies":numCopies,"sides":sides, "media":sizeFile})  
+
 	   else:
 
-		  #conn.printFile (printer_name, file, "Project Report", {"print-color-mode":color,"copies":numCopies,"sides":"one-sided","page-ranges":pages})
-	      conn.printFile (printer_name, file, "Project Report", {"print-color-mode":color,"copies":numCopies,"sides":sides,"page-ranges":pages}) 
+	      conn.printFile (printer_name, file, "Project Report", {"print-color-mode":color,"copies":numCopies,"sides":sides,"media":sizeFile,"page-ranges":pages}) 
           
    #Removing files after print
    filesRemove=glob.glob('static/uploads/*')
