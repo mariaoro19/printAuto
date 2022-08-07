@@ -40,14 +40,29 @@ body {
 form dl {
    display: flex;
    flex-direction: column;
-   justify-content: space-between;
+   justify-content: space-around;
    align-items: center;
    align-content: center;
    text-align: center;
    margin-left: 0.2rem;
    margin-right: 0.2rem;
 
+
 }
+.form2 dl {
+   display: flex;
+   flex-direction: column;
+   justify-content: space-around;
+   align-items: center;
+   align-content: center;
+   text-align: center;
+   margin-left: 0.2rem;
+   margin-right: 0.2rem;
+   height: 20rem;
+
+}
+
+
 
 
 .btn1 {

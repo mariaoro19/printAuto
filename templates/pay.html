@@ -38,17 +38,26 @@
                 <label>Tamaño : {{sizeFile}}</label>
                 {% endif %}
             </div>
-            <form class="form" method="post" action="{{ url_for('pay', filename=filename) }}" method="GET"
+            <form class="form2" method="post" action="{{ url_for('pay', filename=filename) }}" method="GET"
                 enctype="multipart/form-data">
                 <dl>
                     <p>
                     <div class="printType">
-                        <label style="font-weight: bold;">Escoga tipo de impresion: </label> <br>
+                        <label style="font-weight: bold;">Escoga tipo de impresión: </label> <br>
                         <label>
                             <input type="radio" name="color" value="monochrome" required> Blaco y Negro
                         </label>
                         <label>
                             <input type="radio" name="color" value="color"> Color
+                        </label>
+                    </div>
+                    <div class="printPageTypes">
+                        <label style="font-weight: bold;">Escoga modo de impresión: </label> <br>
+                        <label>
+                            <input type="radio" name="side" value="two-sided-long-edge" required> Doble cara
+                        </label>
+                        <label>
+                            <input type="radio" name="side" value="one-sided"> Una cara
                         </label>
                     </div>
                     <div class="printCopies">

@@ -111,10 +111,11 @@ def pay(filename):
    color=request.form.get('color')
    numCopies=str(request.form.get('numCopies'))
    pages=request.form.get('pages')
-	
+   sides= request.form.get('side')	
    print(color)
    print(numCopies)
    print(pages)
+   #print(sizeFile)
    if request.method == 'POST':
 	   #f = request.files['file']
 	   #f.save(secure_filename(f.filename))
@@ -127,14 +128,16 @@ def pay(filename):
 	   #file =f.filename
 	   file="static/uploads/"+filename
 	   print(file)
-	#    if pages=="":
+	   if pages=="":
 
-	# 	   #conn.printFile (printer_name, filename, "Project Report", {})    
-	# 	   #conn.printFile (printer_name, filename, "Project Report", {"print-color-mode":"monochrome","copies":"1","sides":"two-sided-long-edge"})  
-	# 	   conn.printFile (printer_name, file, "Project Report", {"print-color-mode":color,"copies":numCopies,"sides":"one-sided"}) 
-	#    else:
-	# 	   conn.printFile (printer_name, file, "Project Report", {"print-color-mode":color,"copies":numCopies,"sides":"one-sided","page-ranges":pages}) 
-   
+	      #conn.printFile (printer_name, filename, "Project Report", {})    
+	      conn.printFile (printer_name, file, "Project Report", {"print-color-mode":color,"copies":numCopies,"sides":sides})  
+	      #conn.printFile (printer_name, file, "Project Report", {"print-color-mode":color,"copies":numCopies,"sides":"one-sided"}) 
+	   else:
+
+		  #conn.printFile (printer_name, file, "Project Report", {"print-color-mode":color,"copies":numCopies,"sides":"one-sided","page-ranges":pages})
+	      conn.printFile (printer_name, file, "Project Report", {"print-color-mode":color,"copies":numCopies,"sides":sides,"page-ranges":pages}) 
+          
    #Removing files after print
    filesRemove=glob.glob('static/uploads/*')
    for f in filesRemove:
@@ -146,7 +149,7 @@ def pay(filename):
 # Connecting to the localhost
 if __name__ == '__main__':
    
-   app.run(debug=True, port=3002, host='192.168.1.15')
+   app.run(debug=True, port=3003, host='192.168.1.15')
    #app.run(debug=True, port=3003, host='127.0.0.2')
    
    #app.config['SERVER_NAME']= "printexp.dev:3003"
