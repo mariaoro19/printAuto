@@ -33,10 +33,19 @@ body {
    flex-direction: column;
    justify-content: space-around;
    align-items: center;
-   width: 80%;
    height: 30%;
 
 }
+/*
+form{
+   background-color: aqua;
+   display: flex;
+   flex-direction: column;
+   justify-content: space-around;
+   align-items: center;
+   width: 70%;
+}
+*/
 
 form dl {
    display: flex;
@@ -50,6 +59,8 @@ form dl {
 
 
 }
+
+/*
 .form2 dl {
    display: flex;
    flex-direction: column;
@@ -62,7 +73,7 @@ form dl {
    height: 20rem;
 
 }
-
+*/
 
 .btn1 {
    margin-top: 1rem;
@@ -79,9 +90,8 @@ form dl {
    padding-top: 1rem;
    font-size: 1rem;
    font-family: 'Poppins', sans-serif;
-
    margin-top: 1rem;
-   width: 10rem;
+   
 }
 
 .fileUpload {
@@ -90,6 +100,8 @@ form dl {
    justify-content: space-around;
    align-items: center;
    font-size: 1.3rem;
+   
+   
 }
 
 .printInfo {
@@ -131,6 +143,7 @@ form dl {
    align-content: space-around;
    height: 7rem;
    margin-bottom: 2rem;
+   
 
 }
 .error{
@@ -140,16 +153,21 @@ form dl {
 }
 
 @media only screen and (min-width: 360px) and (max-width: 767px) {
+   
+   
    body {
       font-size: 12px;
+      text-align: center;
+   
    }
-
+   
    .mainFile {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       align-items: center;
       width: 80%;
+      
    }
 
    .file {
@@ -160,6 +178,18 @@ form dl {
    .logo{
       width: 80%;
    }
+   
+   .btn{
+
+      width: 60%;
+      align-items:center;
+      text-align: center;
+   }
+
+   
+ 
+   
+   
    
 
 }

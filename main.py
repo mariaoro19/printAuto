@@ -71,7 +71,7 @@ def upload_image():
 		return redirect(request.url)
 	file = request.files['file']
 	if file.filename == '':
-		flash('No ha seleccionado archivo')
+		flash('No ha seleccionado archivo','error')
 		return redirect(request.url)
 	if file and allowed_file(file.filename):
 		filename = secure_filename(file.filename)
