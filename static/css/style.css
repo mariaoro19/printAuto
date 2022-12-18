@@ -34,6 +34,7 @@ body {
    justify-content: space-around;
    align-items: center;
    width: 80%;
+   height: 30%;
 
 }
 
@@ -132,6 +133,11 @@ form dl {
    margin-bottom: 2rem;
 
 }
+.error{
+   margin-top: 1rem;
+   color: #f7660b;
+   font-size: 1.5rem;
+}
 
 @media only screen and (min-width: 360px) and (max-width: 767px) {
    body {
@@ -154,5 +160,6 @@ form dl {
    .logo{
       width: 80%;
    }
+   
 
 }

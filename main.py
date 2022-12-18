@@ -96,7 +96,7 @@ def upload_image():
 		
 		return render_template('pay.html', filename=filename,totalpages=totalpages, sizeFile=sizeFile)
 	else:
-		flash('Formato del documento no admitido')
+		flash('Formato del documento no admitido', 'error')
 		return redirect(request.url)
 	
 	
