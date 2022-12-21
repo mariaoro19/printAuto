@@ -125,8 +125,9 @@ def pay(filename):
 	   #f.save(secure_filename(f.filename))
 	   conn = cups.Connection ()
 	   printers = conn.getPrinters ()
+	   print('printer',printers)
 	   for printer in printers:
-		   print (printer, printers[printer]["device-uri"])
+		   print ("printer:"+printer, printers[printer]["device-uri"])
 		   printer_name=printer
 	   #print(f.filename)
 	   #file =f.filename
@@ -152,7 +153,7 @@ def pay(filename):
 # Connecting to the localhost
 if __name__ == '__main__':
    
-   app.run(debug=True, port=3003, host='192.168.1.15')
+   app.run(debug=True, port=3003, host='192.168.1.21')
    #app.run(debug=True, port=3003, host='127.0.0.2')
    
    #app.config['SERVER_NAME']= "printexp.dev:3003"
