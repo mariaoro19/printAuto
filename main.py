@@ -56,55 +56,55 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif', 'pdf'])
 
 def allowed_file(filename):
-	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 #Display the main page
 @app.route('/')
 def upload_form():
-	return render_template('upload.html')
+    return render_template('upload.html')
 
 #Display and do a Post in the API for choosing the file
 @app.route('/', methods=['POST'])
 def upload_image():
-	if 'file' not in request.files:
-		flash('No file part')
-		return redirect(request.url)
-	file = request.files['file']
-	if file.filename == '':
-		flash('No ha seleccionado archivo','error')
-		return redirect(request.url)
-	if file and allowed_file(file.filename):
-		filename = secure_filename(file.filename)
-		file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    if 'file' not in request.files:
+        flash('No file part')
+        return redirect(request.url)
+    file = request.files['file']
+    if file.filename == '':
+        flash('No ha seleccionado archivo','error')
+        return redirect(request.url)
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-		if filename.rsplit('.', 1)[1].lower() == 'pdf':
-			filepdf='static/uploads/'+filename
-			file2 = open(filepdf, 'rb')
-			readpdf = PyPDF2.PdfFileReader(file2)
-			totalpages = readpdf.numPages
-			sizeFileV = readpdf.getPage(0).mediaBox
-			if sizeFileV[2]>612:
-			   sizeFile="Legal"
-			else:
-			   sizeFile="Letter"	
-		else:
-			totalpages = 1
-			sizeFile="Carta"	
-		print("total pages",totalpages)
-		flash('Imagen cargada exitosamente')
-		session['size'] = sizeFile
-		
-		return render_template('pay.html', filename=filename,totalpages=totalpages, sizeFile=sizeFile)
-	else:
-		flash('Formato del documento no admitido', 'error')
-		return redirect(request.url)
-	
-	
+        if filename.rsplit('.', 1)[1].lower() == 'pdf':
+            filepdf='static/uploads/'+filename
+            file2 = open(filepdf, 'rb')
+            readpdf = PyPDF2.PdfFileReader(file2)
+            totalpages = readpdf.numPages
+            sizeFileV = readpdf.getPage(0).mediaBox
+            if sizeFileV[2]>612:
+               sizeFile="Legal"
+            else:
+               sizeFile="Letter"	
+        else:
+            totalpages = 1
+            sizeFile="Letter"	
+        print("total pages",totalpages)
+        flash('Imagen cargada exitosamente')
+        session['size'] = sizeFile
+        
+        return render_template('pay.html', filename=filename,totalpages=totalpages, sizeFile=sizeFile)
+    else:
+        flash('Formato del documento no admitido', 'error')
+        return redirect(request.url)
+    
+    
 #Function to display file
 @app.route('/display/<filename>')
 def display_image(filename):
-	#print('display_image filename: ' + filename)
-	return redirect(url_for('static', filename='uploads/' + filename), code=301)
+    #print('display_image filename: ' + filename)
+    return redirect(url_for('static', filename='uploads/' + filename), code=301)
 
 # # Printing after uploading the file	
 @app.route('/payProcess/<filename>', methods=['GET','POST'])
@@ -116,36 +116,39 @@ def pay(filename):
    print(color)
    print(numCopies)
    print(pages)
+   print(sides)
    #size  = sizeFile.get('sizeFile',None)
    #print(size)
    sizeFile = session.get('size', None)
    print(sizeFile)
    if request.method == 'POST':
-	   #f = request.files['file']
-	   #f.save(secure_filename(f.filename))
-	   conn = cups.Connection ()
-	   printers = conn.getPrinters ()
-	   print('printer',printers)
-	   for printer in printers:
-		   print ("printer:"+printer, printers[printer]["device-uri"])
-		   printer_name=printer
-	   #print(f.filename)
-	   #file =f.filename
-	   file="static/uploads/"+filename
-	   print(file)
-	   if pages=="":
+       #f = request.files['file']
+       #f.save(secure_filename(f.filename))
+       conn = cups.Connection ()
+       printers = conn.getPrinters ()
+       print('printer',printers)
+       for printer in printers:
+           print ("printer:"+printer, printers[printer]["device-uri"])
+           printer_name=printer
+       #print(f.filename)
+       #file =f.filename
+       file="static/uploads/"+filename
+       print(file)
+       sizeFile= "Letter"
+       #conn.printFile (printer_name, file, "Project Report", {"Duplex":"DuplexTumble"}) 
+     
+         
+       if pages=="":
+            
+          conn.printFile (printer_name, file, "Project Report", {"print-color-mode":color,"copies":numCopies,"sides":sides, "media":sizeFile}) 
+       else:
 
-	      #conn.printFile (printer_name, filename, "Project Report", {})    
-	      conn.printFile (printer_name, file, "Project Report", {"print-color-mode":color,"copies":numCopies,"sides":sides, "media":sizeFile})  
-
-	   else:
-
-	      conn.printFile (printer_name, file, "Project Report", {"print-color-mode":color,"copies":numCopies,"sides":sides,"media":sizeFile,"page-ranges":pages}) 
+          conn.printFile (printer_name, file, "Project Report", {"print-color-mode":color,"copies":numCopies,"sides":sides, "media":sizeFile,"page-ranges":pages}) 
           
    #Removing files after print
    filesRemove=glob.glob('static/uploads/*')
    for f in filesRemove:
-	   os.remove(f)
+       os.remove(f)
 
    
    return render_template('payProcess.html')
