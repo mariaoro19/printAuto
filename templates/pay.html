@@ -14,70 +14,76 @@
 </head>
 
 <body>
-    <div class="logoInfo">
-        <img class="logo" src="/static/img/printexpress.PNG" />
-        <div class="imgLoad">
-            <p>
-                {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                {% for message in messages %}
-            <p>{{ message }}</p>
-            {% endfor %}
-
-            {% endif %}
-            {% endwith %}
-            </p>
-            {% if filename %}
-        </div>
-    </div>
-    <div class="mainFile">
-        <embed class="file" src="{{ url_for('display_image', filename=filename) }}">
-        <div class="Info">
-            <div class="printInfo">
-                <label>Numero de páginas : {{totalpages}}</label>
-                <label>Tamaño : {{sizeFile}}</label>
+    
+        <form class="back">
+            <input type="button" class="btnBack" value="<" onclick="history.back()">
+        </form>
+        <div class="logoInfo">
+            <img class="logo" src="/static/img/printexpress.PNG" />
+            <div class="imgLoad">
+                <p>
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                    {% for message in messages %}
+                <p>{{ message }}</p>
+                {% endfor %}
+    
                 {% endif %}
+                {% endwith %}
+                </p>
+                {% if filename %}
             </div>
-            <form class="form2" method="post" action="{{ url_for('pay', filename=filename) }}" method="GET"
-                enctype="multipart/form-data">
-                <dl>
-                    <p>
-                    <div class="printType">
-                        <label style="font-weight: bold;">Escoga tipo de impresión: </label> <br>
-                        <label>
-                            <input type="radio" name="color" value="monochrome" required> Blaco y Negro
-                        </label>
-                        <label>
-                            <input type="radio" name="color" value="color"> Color
-                        </label>
-                    </div>
-                    <div class="printPageTypes">
-                        <label style="font-weight: bold">Escoga modo de impresión: </label> <br>
-                        <label>
-                            <input type="radio" name="side" value="one-sided" required> Una cara
-                        </label>
-                        <label>
-                            <input type="radio" name="side" value="DuplexTumble"> Doble Cara
-                        </label>
-                    </div>
-                    <div class="printCopies">
-                        <label style="font-weight: bold;">Ingrese # copias: </label> <br>
-                        <input type="number" name="numCopies" value="1">
-                    </div>
-                    <div class="printPages">
-                        <label style="font-weight: bold;">Ingrese paginas a imprimir: </label> <br>
-                        <input type="text" name="pages" placeholder="Todas / 1-2">
-                    </div>
-                    <p>
-                        <input class="btn1" type="submit" name="pay" value="Pagar">
-                    </p>
-
-                    </p>
-                </dl>
-            </form>
         </div>
-
-    </div>
+        <div class="mainFile">
+            <embed class="file" src="{{ url_for('display_image', filename=filename) }}">
+            <div class="Info">
+                <div class="printInfo">
+                    <label>Numero de páginas : {{totalpages}}</label>
+                    <label>Tamaño : {{sizeFile}}</label>
+                    {% endif %}
+                </div>
+                <form class="form2" method="post" action="{{ url_for('pay', filename=filename) }}" method="GET"
+                    enctype="multipart/form-data">
+                    <dl>
+                        <p>
+                        <div class="printType">
+                            <label style="font-weight: bold;">Escoga tipo de impresión: </label> <br>
+                            <label>
+                                <input type="radio" name="color" value="monochrome" required> Blaco y Negro
+                            </label>
+                            <label>
+                                <input type="radio" name="color" value="color"> Color
+                            </label>
+                        </div>
+                        <div class="printPageTypes">
+                            <label style="font-weight: bold">Escoga modo de impresión: </label> <br>
+                            <label>
+                                <input type="radio" name="side" value="one-sided" required> Una cara
+                            </label>
+                            <label>
+                                <input type="radio" name="side" value="DuplexTumble"> Doble Cara
+                            </label>
+                        </div>
+                        <div class="printCopies">
+                            <label style="font-weight: bold;">Ingrese # copias: </label> <br>
+                            <input type="number" name="numCopies" value="1">
+                        </div>
+                        <div class="printPages">
+                            <label style="font-weight: bold;">Ingrese paginas a imprimir: </label> <br>
+                            <input type="text" name="pages" placeholder="Todas / 1-2">
+                        </div>
+                        <p>
+                            <input class="btn1" type="submit" name="pay" value="Pagar">
+                        </p>
+                        
+    
+                        </p>
+                    </dl>
+                </form>
+            </div>
+    
+        </div>
+   
 </body>
 
 </html>

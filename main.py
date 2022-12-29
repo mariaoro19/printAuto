@@ -121,12 +121,12 @@ def pay(filename):
       
        #conn.printFile (printer_name, file, "Project Report", {"Duplex":"DuplexTumble"}) 
     
-       if pages=="":
+    #    if pages=="":
             
-          printid = conn.printFile (printer_name, file, "Project Report", {"print-color-mode":color,"copies":numCopies,"sides":sides, "media":sizeFile}) 
-       else:
+    #       printid = conn.printFile (printer_name, file, "Project Report", {"print-color-mode":color,"copies":numCopies,"sides":sides, "media":sizeFile}) 
+    #    else:
 
-          printid= conn.printFile (printer_name, file, "Project Report", {"print-color-mode":color,"copies":numCopies,"sides":sides, "media":sizeFile,"page-ranges":pages}) 
+    #       printid= conn.printFile (printer_name, file, "Project Report", {"print-color-mode":color,"copies":numCopies,"sides":sides, "media":sizeFile,"page-ranges":pages}) 
        
           
        

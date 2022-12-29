@@ -84,6 +84,33 @@ form dl {
    border-color: #983d01;
    color:white;
    font-weight: bold;
+   cursor:pointer;
+
+   
+   
+}
+.back{
+   display: flex;
+   flex-direction: column;
+   width: 100%;
+
+}
+.btnBack{
+   margin-top: 1rem;
+   margin-left: 1rem;
+   font-size: 2rem;
+   background-color: white;
+   border-radius: 3rem;
+   background-color: #f7660b;
+   border-color: #983d01;
+   color:white;
+   font-weight: bold;
+   width: 3rem;
+   height: 3rem;
+   text-align: center;
+   cursor:pointer;
+
+
    
 }
 .btn {
@@ -91,6 +118,8 @@ form dl {
    font-size: 1rem;
    font-family: 'Poppins', sans-serif;
    margin-top: 1rem;
+   font-weight: bold;
+   cursor:pointer;
    
 }
 
@@ -184,6 +213,7 @@ form dl {
       width: 60%;
       align-items:center;
       text-align: center;
+      cursor:pointer;
    }
 
    
