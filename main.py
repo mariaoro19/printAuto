@@ -1,14 +1,13 @@
 # Libreries
 
 import os
-#from flask import Flask, render_template, request
-#from werkzeug.utils import secure_filename
 import cups
 from flask import Flask, session, flash, request, redirect, url_for, render_template
 from werkzeug.utils import secure_filename
 import PyPDF2
 import glob
-
+import subprocess
+import time
 #Variables
 UPLOAD_FOLDER = 'static/uploads/'
 
@@ -20,40 +19,10 @@ app.secret_key = "secret key"
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
-# # Calling principal html index
-# @app.route("/")
-# def hello():
-#    now = datetime.datetime.now()
-#    timeString = now.strftime("%Y-%m-%d %H:%M")
-#    templateData = {
-#       'title' : 'HELLO!',
-#       'time': timeString
-#       }
-#    return render_template('index.html', **templateData)
-
-# @app.route('/upload')
-# def upload_file():
-#    return render_template('index.html')
-
-# # Printing after uploading the file	
-# @app.route('/Send', methods = ['GET', 'POST'])
-# def send_file():
-#    print("Send")
-#    if request.method == 'POST':
-#       f = request.files['file']
-#       f.save(secure_filename(f.filename))
-#       # conn = cups.Connection ()
-#       # printers = conn.getPrinters ()
-#       # for printer in printers:
-#       #    print (printer, printers[printer]["device-uri"])
-#       #    printer_name=printer
-#       # print(f.filename)
-#       # file =f.filename
-#       # conn.printFile (printer_name, file, "Project Report", {})  
-#       return render_template('send.html')
 
 #Formats of files allowed to print
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif', 'pdf'])
+#ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif', 'pdf'])
+ALLOWED_EXTENSIONS = set([ 'pdf'])
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -82,19 +51,38 @@ def upload_image():
             file2 = open(filepdf, 'rb')
             readpdf = PyPDF2.PdfFileReader(file2)
             totalpages = readpdf.numPages
-            sizeFileV = readpdf.getPage(0).mediaBox
-            if sizeFileV[2]>612:
-               sizeFile="Legal"
+            countLetter=0
+            countLegal=0
+            sizeFileVector=[]
+            #Loop to check the bigger page
+            for i in range(totalpages):
+                sizeFileV = readpdf.getPage(i).mediaBox
+                print(sizeFileV[3])
+                sizeFileVector.append(sizeFileV)
+            sizeFileV= max(sizeFileVector)
+            
+            # We have that Letter is 612x792 and Legal is 612x939
+            if sizeFileV[3]>792:
+                #sizeFile="Custom.612x936"
+                sizeFile="Legal"
+                session['size'] = sizeFile
+                flash('Imagen cargada exitosamente')
+                return render_template('pay.html', filename=filename,totalpages=totalpages, sizeFile=sizeFile)
+            elif sizeFileV[2]>612 and sizeFileV[3]>936: 
+                flash('Tamaño del documento deben ser Carta u Oficio', 'error')
+                return redirect(request.url)
             else:
-               sizeFile="Letter"	
+                sizeFile="Letter"
+                session['size'] = sizeFile
+                flash('Imagen cargada exitosamente')
+                return render_template('pay.html', filename=filename,totalpages=totalpages, sizeFile=sizeFile)
+                    
+            
+        #For now this else doesn work, its for images
         else:
             totalpages = 1
-            sizeFile="Letter"	
-        print("total pages",totalpages)
-        flash('Imagen cargada exitosamente')
-        session['size'] = sizeFile
-        
-        return render_template('pay.html', filename=filename,totalpages=totalpages, sizeFile=sizeFile)
+            sizeFile="Letter"   
+    
     else:
         flash('Formato del documento no admitido', 'error')
         return redirect(request.url)
@@ -104,6 +92,7 @@ def upload_image():
 @app.route('/display/<filename>')
 def display_image(filename):
     #print('display_image filename: ' + filename)
+    
     return redirect(url_for('static', filename='uploads/' + filename), code=301)
 
 # # Printing after uploading the file	
@@ -113,12 +102,7 @@ def pay(filename):
    numCopies=str(request.form.get('numCopies'))
    pages=request.form.get('pages')
    sides= request.form.get('side')	
-   print(color)
-   print(numCopies)
-   print(pages)
-   print(sides)
    #size  = sizeFile.get('sizeFile',None)
-   #print(size)
    sizeFile = session.get('size', None)
    print(sizeFile)
    if request.method == 'POST':
@@ -126,25 +110,43 @@ def pay(filename):
        #f.save(secure_filename(f.filename))
        conn = cups.Connection ()
        printers = conn.getPrinters ()
-       print('printer',printers)
+       #print('printer',printers)
        for printer in printers:
            print ("printer:"+printer, printers[printer]["device-uri"])
            printer_name=printer
        #print(f.filename)
        #file =f.filename
        file="static/uploads/"+filename
-       print(file)
-       sizeFile= "Letter"
+       #print(file)
+      
        #conn.printFile (printer_name, file, "Project Report", {"Duplex":"DuplexTumble"}) 
-     
-         
+    
        if pages=="":
             
-          conn.printFile (printer_name, file, "Project Report", {"print-color-mode":color,"copies":numCopies,"sides":sides, "media":sizeFile}) 
+          printid = conn.printFile (printer_name, file, "Project Report", {"print-color-mode":color,"copies":numCopies,"sides":sides, "media":sizeFile}) 
        else:
 
-          conn.printFile (printer_name, file, "Project Report", {"print-color-mode":color,"copies":numCopies,"sides":sides, "media":sizeFile,"page-ranges":pages}) 
+          printid= conn.printFile (printer_name, file, "Project Report", {"print-color-mode":color,"copies":numCopies,"sides":sides, "media":sizeFile,"page-ranges":pages}) 
+       
           
+       
+   #print(printid)
+   #printjob=conn.getJobAttributes(printid)["job-state"]
+   #printid = conn.printFile(printer_name, file, 'test', {})
+   #Checking if the print was suscessfull
+   #print(printid)
+   #print(printjob)
+   stop = 0
+   TIMEOUT = 50
+    
+#    while str(subprocess.check_output(["lpstat"])).find(str(printid)) > 0 and    stop < TIMEOUT:
+#        stop+= 1
+#        time.sleep(1)
+#    if stop < TIMEOUT:
+#        print ("PRINT SUCCESS")
+#    else:
+#        print ("PRINT FAILURE")
+
    #Removing files after print
    filesRemove=glob.glob('static/uploads/*')
    for f in filesRemove:
