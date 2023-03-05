@@ -8,10 +8,14 @@ import PyPDF2
 import glob
 import subprocess
 import time
+from datetime import datetime
+from sqlalchemy import select
+
+
 #Variables
 UPLOAD_FOLDER = 'static/uploads/'
 
-
+basedir = os.path.abspath(os.path.dirname(__file__))
 
 # Initialing API
 app = Flask(__name__)
@@ -19,6 +23,44 @@ app.secret_key = "secret key"
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
+# Initialing database
+from app.config import Config
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+
+#app = Flask(__name__)
+#app.config.from_object(Config)
+#SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
+ #       'sqlite:///' + os.path.join(basedir, 'app.db')
+#SQLALCHEMY_TRACK_MODIFICATIONS = False
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.app'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False 
+
+
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
+class Prints(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    printDate = db.Column(db.DateTime, index=True, default=datetime.utcnow())
+    sheets = db.Column(db.Integer)
+    totalPrice = db.Column(db.Integer)
+    state = db.Column(db.Integer)
+    
+    def __repr__(self):
+        return '<Print sheets {}>'.format(self.sheets)
+
+
+#from app import models
+db.create_all()
+#p=Prints(sheets=2, totalPrice=2000, state=0)
+#db.session.add(p)
+#db.session.commit()
+
+#for p in Prints:
+printers = Prints.query.all()
+for p in printers:
+     print(p.id, p.printDate)
 
 #Formats of files allowed to print
 #ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif', 'pdf'])
@@ -97,14 +139,23 @@ def display_image(filename):
 
 # # Printing after uploading the file	
 @app.route('/payProcess/<filename>', methods=['GET','POST'])
-def pay(filename):
+def pay(filename,totalpages):
    color=request.form.get('color')
    numCopies=str(request.form.get('numCopies'))
    pages=request.form.get('pages')
    sides= request.form.get('side')	
+   #totalPages= session.get('totalpages', None)	
    #size  = sizeFile.get('sizeFile',None)
    sizeFile = session.get('size', None)
-   print(sizeFile)
+   print("pages","numCopies")
+   #print(totalpages, numCopies)
+   p=Prints(sheets=pages, totalPrice=2000, state=0)
+   db.session.add(p)
+   db.session.commit()
+   #printers = Prints.query.all()
+   #for p in printers:
+    #  print(p.id, p.printDate)
+   
    if request.method == 'POST':
        #f = request.files['file']
        #f.save(secure_filename(f.filename))
@@ -158,7 +209,7 @@ def pay(filename):
 # Connecting to the localhost
 if __name__ == '__main__':
    
-   app.run(debug=True, port=3003, host='192.168.1.21')
+   app.run(debug=True, port=3002, host='192.168.1.21')
    #app.run(debug=True, port=3003, host='127.0.0.2')
    
    #app.config['SERVER_NAME']= "printexp.dev:3003"
