@@ -109,6 +109,7 @@ def upload_image():
                 sizeFile="Legal"
                 session['size'] = sizeFile
                 flash('Imagen cargada exitosamente')
+                #print(totalpages)
                 return render_template('pay.html', filename=filename,totalpages=totalpages, sizeFile=sizeFile)
             elif sizeFileV[2]>612 and sizeFileV[3]>936: 
                 flash('Tamaño del documento deben ser Carta u Oficio', 'error')
@@ -117,6 +118,7 @@ def upload_image():
                 sizeFile="Letter"
                 session['size'] = sizeFile
                 flash('Imagen cargada exitosamente')
+                print(totalpages)
                 return render_template('pay.html', filename=filename,totalpages=totalpages, sizeFile=sizeFile)
                     
             
@@ -134,29 +136,34 @@ def upload_image():
 @app.route('/display/<filename>')
 def display_image(filename):
     #print('display_image filename: ' + filename)
-    
+
     return redirect(url_for('static', filename='uploads/' + filename), code=301)
 
 # # Printing after uploading the file	
-@app.route('/payProcess/<filename>', methods=['GET','POST'])
-def pay(filename,totalpages):
+#@app.route('/pay/<filename>', methods=['GET','POST'])
+@app.route('/pay/<filename>', methods=['POST','GET'])
+def pay(filename):
+   
    color=request.form.get('color')
-   numCopies=str(request.form.get('numCopies'))
+   #numCopies=str(request.form.get('numCopies'))
+   numCopies=int(request.form.get('numCopies'))
    pages=request.form.get('pages')
-   sides= request.form.get('side')	
-   #totalPages= session.get('totalpages', None)	
-   #size  = sizeFile.get('sizeFile',None)
+   sides= request.form.get('side')
+   filepdf='static/uploads/'+filename
+   file2 = open(filepdf, 'rb')
+   readpdf = PyPDF2.PdfFileReader(file2)
+   totalpages = readpdf.numPages
+   numPagePrinted = totalpages + numCopies	
    sizeFile = session.get('size', None)
-   print("pages","numCopies")
-   #print(totalpages, numCopies)
-   p=Prints(sheets=pages, totalPrice=2000, state=0)
+   p=Prints(sheets=numPagePrinted, totalPrice=2000, state=0)
    db.session.add(p)
    db.session.commit()
    #printers = Prints.query.all()
    #for p in printers:
-    #  print(p.id, p.printDate)
+       #  print(p.id, p.printDate)
    
    if request.method == 'POST':
+   #else:
        #f = request.files['file']
        #f.save(secure_filename(f.filename))
        conn = cups.Connection ()
