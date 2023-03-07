@@ -1,8 +1,225 @@
-body {
-   background: blue;
-   color: yellow;
+html {
+   font-size: 16px;
+   font-family: 'Poppins', sans-serif;
 }
-.file{
-   width: 800px;
-   height: 2100px;
+
+* {
+   background-color: white;
+   margin: 0;
+
+}
+
+body {
+   width: 100vw;
+   height: 100vh;
+   display: flex;
+   flex-direction: column;
+   justify-content: space-around;
+   align-items: center;
+
+
+}
+
+.logo {
+   width: 60%;
+   height: auto;
+   padding-top: 2rem;
+ 
+
+}
+
+.selectFile {
+   display: flex;
+   flex-direction: column;
+   justify-content: space-around;
+   align-items: center;
+   height: 30%;
+
+}
+/*
+form{
+   background-color: aqua;
+   display: flex;
+   flex-direction: column;
+   justify-content: space-around;
+   align-items: center;
+   width: 70%;
+}
+*/
+
+form dl {
+   display: flex;
+   flex-direction: column;
+   justify-content: space-around;
+   align-items: center;
+   align-content: center;
+   text-align: center;
+   margin-left: 0.2rem;
+   margin-right: 0.2rem;
+
+
+}
+
+/*
+.form2 dl {
+   display: flex;
+   flex-direction: column;
+   justify-content: space-around;
+   align-items: center;
+   align-content: center;
+   text-align: center;
+   margin-left: 0.2rem;
+   margin-right: 0.2rem;
+   height: 20rem;
+
+}
+*/
+
+.btn1 {
+   margin-top: 1rem;
+   font-size: 1.2rem;
+   background-color: white;
+   border-radius: 0.5rem;
+   background-color: #f7660b;
+   border-color: #983d01;
+   color:white;
+   font-weight: bold;
+   cursor:pointer;
+
+   
+   
+}
+.back{
+   display: flex;
+   flex-direction: column;
+   width: 100%;
+
+}
+.btnBack{
+   margin-top: 1rem;
+   margin-left: 1rem;
+   font-size: 2rem;
+   background-color: white;
+   border-radius: 3rem;
+   background-color: #f7660b;
+   border-color: #983d01;
+   color:white;
+   font-weight: bold;
+   width: 3rem;
+   height: 3rem;
+   text-align: center;
+   cursor:pointer;
+
+
+   
+}
+.btn {
+   padding-top: 1rem;
+   font-size: 1rem;
+   font-family: 'Poppins', sans-serif;
+   margin-top: 1rem;
+   font-weight: bold;
+   cursor:pointer;
+   
+}
+
+.fileUpload {
+   display: flex;
+   flex-direction: column;
+   justify-content: space-around;
+   align-items: center;
+   font-size: 1.3rem;
+   
+   
+}
+
+.printInfo {
+   display: flex;
+   flex-direction: column;
+   justify-content: space-around;
+   align-items: center;
+
+}
+
+
+.logoInfo {
+   display: flex;
+   flex-direction: column;
+   justify-content: space-between;
+   align-items: center;
+}
+
+.mainFile {
+   display: flex;
+   flex-direction: row;
+   justify-content: space-around;
+   align-items: center;
+   width: 95%;
+   height: 80vh;
+}
+
+.file {
+   width: 50%;
+   height: 75vh;
+
+}
+.message {
+   display: flex;
+   flex-direction: column;
+   justify-content: space-around;
+   align-items: center;
+   font-size: 1.2rem;
+   align-content: space-around;
+   height: 7rem;
+   margin-bottom: 2rem;
+   
+
+}
+.error{
+   margin-top: 1rem;
+   color: #f7660b;
+   font-size: 1.5rem;
+}
+
+@media only screen and (min-width: 360px) and (max-width: 767px) {
+   
+   
+   body {
+      font-size: 12px;
+      text-align: center;
+   
+   }
+   
+   .mainFile {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      width: 80%;
+      
+   }
+
+   .file {
+      width: 95%;
+      height: auto;
+
+   }
+   .logo{
+      width: 80%;
+   }
+   
+   .btn{
+
+      width: 60%;
+      align-items:center;
+      text-align: center;
+      cursor:pointer;
+   }
+
+   
+ 
+   
+   
+   
+
 }
