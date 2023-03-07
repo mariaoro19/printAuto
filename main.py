@@ -10,7 +10,14 @@ import subprocess
 import time
 from datetime import datetime
 from sqlalchemy import select
+from pytz import timezone
+import pytz
 
+format = "%Y-%m-%d %H:%M:%S %Z%z"
+# Current time in UTC
+now_utc = datetime.now(timezone('UTC'))
+now_col = now_utc.astimezone(timezone('America/Bogota'))
+#print(now_col.strftime(format))
 
 #Variables
 UPLOAD_FOLDER = 'static/uploads/'
@@ -42,7 +49,7 @@ migrate = Migrate(app, db)
 
 class Prints(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    printDate = db.Column(db.DateTime, index=True, default=datetime.utcnow())
+    printDate = db.Column(db.DateTime, index=True, default=now_col)
     sheets = db.Column(db.Integer)
     totalPrice = db.Column(db.Integer)
     state = db.Column(db.Integer)
@@ -59,8 +66,8 @@ db.create_all()
 
 #for p in Prints:
 printers = Prints.query.all()
-for p in printers:
-     print(p.id, p.printDate)
+#for p in printers:
+ #    print(p.id, p.printDate)
 
 #Formats of files allowed to print
 #ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif', 'pdf'])
@@ -153,9 +160,10 @@ def pay(filename):
    file2 = open(filepdf, 'rb')
    readpdf = PyPDF2.PdfFileReader(file2)
    totalpages = readpdf.numPages
-   numPagePrinted = totalpages + numCopies	
+   numPagePrinted = totalpages * numCopies	
    sizeFile = session.get('size', None)
    p=Prints(sheets=numPagePrinted, totalPrice=2000, state=0)
+   print("numPagePrinted",numPagePrinted)
    db.session.add(p)
    db.session.commit()
    #printers = Prints.query.all()
@@ -216,7 +224,7 @@ def pay(filename):
 # Connecting to the localhost
 if __name__ == '__main__':
    
-   app.run(debug=True, port=3002, host='192.168.1.21')
+   app.run(debug=True, port=3003, host='192.168.1.21')
    #app.run(debug=True, port=3003, host='127.0.0.2')
    
    #app.config['SERVER_NAME']= "printexp.dev:3003"
